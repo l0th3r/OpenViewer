@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <iostream>
 
 class GLRenderWidget : public QOpenGLWidget, public QOpenGLFunctions
 {
@@ -16,7 +17,10 @@ protected:
     void initializeGL() override;
     void paintGL() override;
     void resizeGL(int w, int h) override;
+    void loadShadersGL();
 private:
+    QWidget* m_LoadingPanel;
+
     void qColorToRGB(const QColor &C, float &r, float &g, float &b) const;
 };
 
