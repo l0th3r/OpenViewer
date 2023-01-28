@@ -12,12 +12,14 @@ CONFIG += c++17
 
 HEADERS += \
     mainwindow.h \
-    glrenderwidget.h
+    glrenderwidget.h \
+    shader.h
 
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
     glrenderwidget.cpp \
+    shader.cpp \
     utils.cpp
 
 FORMS += \
@@ -27,3 +29,7 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    Shaders/shader.frag \
+    Shaders/shader.vert
