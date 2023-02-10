@@ -32,4 +32,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     Shaders/shader.frag \
-    Shaders/shader.vert
+    Shaders/shader.fragment \
+    Shaders/shader.vert \
+    Shaders/shader.vertex

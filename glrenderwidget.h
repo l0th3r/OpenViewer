@@ -1,7 +1,7 @@
 #ifndef GLRENDERWIDGET_H
 #define GLRENDERWIDGET_H
 
-#include "utils.h"
+#include "shader.h"
 
 #include <QColor>
 #include <QOpenGLWidget>
@@ -16,12 +16,12 @@ public:
     ~GLRenderWidget();
 
 protected:
-    GLuint m_ShaderProgram;
-
     void initializeGL() override;
     void paintGL() override;
     void resizeGL(int w, int h) override;
-    void loadShadersGL();
+
+    // Store shader program
+    Shader* m_Shaders;
 
     // TEMP
     GLfloat *m_Vertices;
