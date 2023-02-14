@@ -11,6 +11,8 @@ public:
     GLuint ID;
 
     VAO();
+    ~VAO();
+
     void LinkVBOLayout(VBO vbo, GLuint layout);
     void Bind();
     void Unbind();

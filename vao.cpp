@@ -3,8 +3,13 @@
 VAO::VAO()
 {
     initializeOpenGLFunctions();
-
     glGenVertexArrays(1, &ID);
+}
+
+VAO::~VAO()
+{
+    Delete();
+    Unbind();
 }
 
 void VAO::LinkVBOLayout(VBO vbo, GLuint layout)
