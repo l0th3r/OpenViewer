@@ -11,14 +11,16 @@ CONFIG += c++17
 HEADERS += \
     mainwindow.h \
     glrenderwidget.h \
-    shader.h
+    shader.h \
+    vbo.h
 
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
     glrenderwidget.cpp \
     shader.cpp \
-    utils.cpp
+    utils.cpp \
+    vbo.cpp
 
 FORMS += \
     mainwindow.ui
