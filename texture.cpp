@@ -23,10 +23,6 @@ Texture::Texture(const char* resourcePath, GLenum type, GLenum slot, GLenum form
     glTexParameteri(m_Type, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(m_Type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    // Extra lines in case you choose to use GL_CLAMP_TO_BORDER
-    // float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    // glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
-
     // Assigns the image to the OpenGL Texture object
     glTexImage2D(m_Type, 0, GL_RGBA, img->width(), img->height(), 0, format, pixelType, img->bits());
     // Generates MipMaps
