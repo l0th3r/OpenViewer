@@ -36,21 +36,25 @@ ShaderProgram::ShaderProgram()
     Q_INIT_RESOURCE(resources);
     initializeOpenGLFunctions();
 
-    m_VertexShaderSource = ReadShaderFile(":/Shaders/vertex.shader").c_str();
-    m_FragmentShaderSource = ReadShaderFile(":/Shaders/fragment.shader").c_str();
+    // Read shader files
+    m_VertexShaderSource = ReadShaderFile(":/Shaders/vertex.shader");
+    m_FragmentShaderSource = ReadShaderFile(":/Shaders/fragment.shader");
 
-    GLuint vertexShader = RegisterShader(m_VertexShaderSource, GL_VERTEX_SHADER);
-    GLuint fragmentShader = RegisterShader(m_FragmentShaderSource, GL_FRAGMENT_SHADER);
+    // Register shaders
+    GLuint vertexShader = RegisterShader(m_VertexShaderSource.c_str(), GL_VERTEX_SHADER);
+    GLuint fragmentShader = RegisterShader(m_FragmentShaderSource.c_str(), GL_FRAGMENT_SHADER);
 
+    // Retreive shader compilation logs
     m_VertexCompilationInfo = new ShaderCompilationInfo(vertexShader);
     m_FragmentCompilationInfo = new ShaderCompilationInfo(fragmentShader);
 
+    // Print shader compilation logs
     std::cout << "Vertex shader with id `" << vertexShader
-              << "`compilation status `" << m_VertexCompilationInfo->GetCompileStatus()
+              << "` compilation status `" << m_VertexCompilationInfo->GetCompileStatus()
               << "` log:\n" << m_VertexCompilationInfo->GetCompileLog() << std::endl;
 
     std::cout << "Fragment shader with id `" << fragmentShader
-              << "`compilation status `" << m_FragmentCompilationInfo->GetCompileStatus()
+              << "` compilation status `" << m_FragmentCompilationInfo->GetCompileStatus()
               << "` log:\n" << m_FragmentCompilationInfo->GetCompileLog() << std::endl;
 
     this->ID = CreateProgram(vertexShader, fragmentShader);

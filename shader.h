@@ -42,8 +42,8 @@ private:
     ShaderCompilationInfo* m_VertexCompilationInfo;
     ShaderCompilationInfo* m_FragmentCompilationInfo;
 
-    const char* m_VertexShaderSource;
-    const char* m_FragmentShaderSource;
+    std::string m_VertexShaderSource;
+    std::string m_FragmentShaderSource;
 
     const std::string ReadShaderFile(const QString resourcePath) const;
     GLuint RegisterShader(const GLchar* shaderSource, const GLenum type);
