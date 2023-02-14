@@ -1,5 +1,4 @@
 #include "shader.h"
-#include <iostream>
 
 // Shader compilation info class
 ShaderCompilationInfo::ShaderCompilationInfo(GLuint shaderID)
@@ -32,21 +31,16 @@ GLint ShaderCompilationInfo::GetCompileStatus() const
 }
 
 // Shader class
-Shader::Shader(const char* vertexContent, const char* fragmentContent)
+ShaderProgram::ShaderProgram()
 {
+    Q_INIT_RESOURCE(resources);
     initializeOpenGLFunctions();
 
-    const char* vertexShaderSource = "#version 3300 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
-            "void main()\n"
-            "{ gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);}\0";
+    m_VertexShaderSource = ReadShaderFile(":/vertex.shader").c_str();
+    m_FragmentShaderSource = ReadShaderFile(":/fragment.shader").c_str();
 
-    const char* fragmentShaderSource = "#version 3300 core\n"
-            "out vec4 FragColor;\n"
-            "void main() { FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f) }\0";
-
-    GLuint vertexShader = RegisterShader(vertexShaderSource, GL_VERTEX_SHADER);
-    GLuint fragmentShader = RegisterShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
+    GLuint vertexShader = RegisterShader(m_VertexShaderSource, GL_VERTEX_SHADER);
+    GLuint fragmentShader = RegisterShader(m_FragmentShaderSource, GL_FRAGMENT_SHADER);
 
     m_VertexCompilationInfo = new ShaderCompilationInfo(vertexShader);
     m_FragmentCompilationInfo = new ShaderCompilationInfo(fragmentShader);
@@ -56,7 +50,7 @@ Shader::Shader(const char* vertexContent, const char* fragmentContent)
               << "` log:\n" << m_VertexCompilationInfo->GetCompileLog() << std::endl;
 
     std::cout << "Fragment shader with id `" << fragmentShader
-              << "`compilation status: `" << m_FragmentCompilationInfo->GetCompileStatus()
+              << "`compilation status `" << m_FragmentCompilationInfo->GetCompileStatus()
               << "` log:\n" << m_FragmentCompilationInfo->GetCompileLog() << std::endl;
 
     this->ID = CreateProgram(vertexShader, fragmentShader);
@@ -65,22 +59,38 @@ Shader::Shader(const char* vertexContent, const char* fragmentContent)
     glDeleteShader(fragmentShader);
 }
 
-Shader::~Shader()
+ShaderProgram::~ShaderProgram()
 {
     this->Disable();
 }
 
-void Shader::Enable()
+void ShaderProgram::Enable()
 {
     glUseProgram(this->ID);
 }
 
-void Shader::Disable()
+void ShaderProgram::Disable()
 {
     glDeleteProgram(this->ID);
 }
 
-GLuint Shader::RegisterShader(const GLchar* shaderSource, const GLenum type)
+const std::string ShaderProgram::ReadShaderFile(const QString resourcePath) const
+{
+    QFile shaderFile(resourcePath);
+
+    if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        throw("Shader file \"" + resourcePath + "\" could not be loaded");
+
+    std::string content;
+
+    while (!shaderFile.atEnd()) {
+        content += shaderFile.readLine().constData();
+    }
+
+    return content;
+}
+
+GLuint ShaderProgram::RegisterShader(const GLchar* shaderSource, const GLenum type)
 {
     GLuint shaderID = glCreateShader(type);
     glShaderSource(shaderID, 1, &shaderSource, NULL);
@@ -89,7 +99,7 @@ GLuint Shader::RegisterShader(const GLchar* shaderSource, const GLenum type)
     return shaderID;
 }
 
-GLuint Shader::CreateProgram(const GLuint vtxID, const GLuint fragID)
+GLuint ShaderProgram::CreateProgram(const GLuint vtxID, const GLuint fragID)
 {
     GLuint prg = glCreateProgram();
     glAttachShader(prg, vtxID);
@@ -97,4 +107,14 @@ GLuint Shader::CreateProgram(const GLuint vtxID, const GLuint fragID)
     glLinkProgram(prg);
 
     return prg;
+}
+
+const ShaderCompilationInfo* ShaderProgram::GetVertexShaderCompilation() const
+{
+    return m_VertexCompilationInfo;
+}
+
+const ShaderCompilationInfo* ShaderProgram::GetFragmentShaderCompilation() const
+{
+    return m_FragmentCompilationInfo;
 }

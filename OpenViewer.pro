@@ -1,6 +1,4 @@
-QT  += core gui
-QT  += openglwidgets
-QT  += opengl
+QT  += core gui openglwidgets opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,8 +28,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    Shaders/shader.frag \
-    Shaders/shader.fragment \
-    Shaders/shader.vert \
-    Shaders/shader.vertex
+RESOURCES += resources.qrc

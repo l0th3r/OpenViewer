@@ -25,7 +25,7 @@ void GLRenderWidget::initializeGL()
     std::cout << "Initialized OpenGL widget with version: " << glGetString(GL_VERSION) << std::endl;
 
     // Get Shaderprogram
-    m_Shaders = new Shader(NULL, NULL);
+    m_Shaders = new ShaderProgram();
 }
 
 void GLRenderWidget::paintGL()

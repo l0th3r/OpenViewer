@@ -21,7 +21,7 @@ protected:
     void resizeGL(int w, int h) override;
 
     // Store shader program
-    Shader* m_Shaders;
+    ShaderProgram* m_Shaders;
 
     // TEMP
     GLfloat *m_Vertices;
