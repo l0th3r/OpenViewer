@@ -11,7 +11,7 @@ GLfloat vertices[] =
     0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,      0.5f, 0.0f, 0.0f,
     -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,     0.8f, 0.3f, 0.2f,
     0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,      0.8f, 0.3f, 0.2f,
-    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,         0.8f, 0.3f, 0.2f
+    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,         0.0f, 0.0f, 0.0f
 };
 
 GLuint indices[] =
@@ -68,9 +68,17 @@ void GLRenderWidget::paintGL()
     vbo->Unbind();
     ebo->Unbind();
 
+    GLuint uniformID = glGetUniformLocation(m_Shaders->ID, "scale");
+
+    // TEMP LOOP START
     m_Shaders->Enable();
+    glUniform1f(uniformID, 1.0f);
+
     vao->Bind();
+
     glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+
+    // TEMP LOOP END
 
     delete vbo;
     delete ebo;
