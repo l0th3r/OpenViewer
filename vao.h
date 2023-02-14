@@ -13,7 +13,7 @@ public:
     VAO();
     ~VAO();
 
-    void LinkVBOLayout(VBO vbo, GLuint layout);
+    void LinkVBOLayout(VBO* vbo, GLuint layout);
     void Bind();
     void Unbind();
     void Delete();
