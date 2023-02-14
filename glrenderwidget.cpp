@@ -1,5 +1,25 @@
-#include "utils.h"
 #include "glrenderwidget.h"
+#include "utils.h"
+#include "vbo.h"
+#include "ebo.h"
+#include "vao.h"
+
+GLfloat vertices[] =
+{
+    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,
+    -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
+    0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
+    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f
+};
+
+GLuint indices[] =
+{
+    0, 3, 5,
+    3, 2, 4,
+    5, 4, 1
+};
 
 GLRenderWidget::GLRenderWidget(QWidget *parent)
     : QOpenGLWidget { parent }
@@ -9,6 +29,7 @@ GLRenderWidget::GLRenderWidget(QWidget *parent)
 GLRenderWidget::~GLRenderWidget()
 {
     m_Shaders->Disable();
+    delete m_Shaders;
 }
 
 void GLRenderWidget::initializeGL()
@@ -24,7 +45,7 @@ void GLRenderWidget::initializeGL()
 
     std::cout << "Initialized OpenGL widget with version: " << glGetString(GL_VERSION) << std::endl;
 
-    // Get Shaderprogram
+    // Create Shader Program
     m_Shaders = new ShaderProgram();
 }
 
@@ -32,52 +53,26 @@ void GLRenderWidget::paintGL()
 {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Create render objects
+    VAO* vao = new VAO();
+    vao->Bind();
+
+    VBO* vbo = new VBO(vertices, sizeof(vertices));
+    EBO* ebo = new EBO(indices, sizeof(indices));
+
+    vao->LinkVBOLayout(vbo, 0);
+    vao->Unbind();
+    vbo->Unbind();
+    ebo->Unbind();
+
     m_Shaders->Enable();
-
-    GLfloat vertices[] =
-    {
-        -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-        0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-        0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,
-        -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-        0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-        0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f
-    };
-
-    GLuint indices[] =
-    {
-        0, 3, 5,
-        3, 2, 4,
-        5, 4, 1
-    };
-
-    GLuint VAO, VBO, EBO;
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(VAO);
+    vao->Bind();
     glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    delete vbo;
+    delete ebo;
+    delete vao;
 }
 
 void GLRenderWidget::resizeGL(int w, int h)
