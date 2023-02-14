@@ -36,8 +36,8 @@ ShaderProgram::ShaderProgram()
     Q_INIT_RESOURCE(resources);
     initializeOpenGLFunctions();
 
-    m_VertexShaderSource = ReadShaderFile(":/vertex.shader").c_str();
-    m_FragmentShaderSource = ReadShaderFile(":/fragment.shader").c_str();
+    m_VertexShaderSource = ReadShaderFile(":/Shaders/vertex.shader").c_str();
+    m_FragmentShaderSource = ReadShaderFile(":/Shaders/fragment.shader").c_str();
 
     GLuint vertexShader = RegisterShader(m_VertexShaderSource, GL_VERTEX_SHADER);
     GLuint fragmentShader = RegisterShader(m_FragmentShaderSource, GL_FRAGMENT_SHADER);

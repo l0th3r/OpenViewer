@@ -1,7 +1,6 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QFile>
 
