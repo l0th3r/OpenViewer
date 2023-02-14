@@ -49,13 +49,18 @@ ShaderProgram::ShaderProgram()
     m_FragmentCompilationInfo = new ShaderCompilationInfo(fragmentShader);
 
     // Print shader compilation logs
-    std::cout << "Vertex shader with id `" << vertexShader
-              << "` compilation status `" << m_VertexCompilationInfo->GetCompileStatus()
-              << "` log:\n" << m_VertexCompilationInfo->GetCompileLog() << std::endl;
+    std::string vertexCompileLog = "Vertex shader compilation status " + std::to_string(m_VertexCompilationInfo->GetCompileStatus());
 
-    std::cout << "Fragment shader with id `" << fragmentShader
-              << "` compilation status `" << m_FragmentCompilationInfo->GetCompileStatus()
-              << "` log:\n" << m_FragmentCompilationInfo->GetCompileLog() << std::endl;
+    if(m_VertexCompilationInfo->GetCompileStatus() != GL_TRUE)
+        vertexCompileLog += " log:\n" + m_VertexCompilationInfo->GetCompileLog();
+
+    std::string fragmentCompileLog = "Fragment shader compilation status " + std::to_string(m_FragmentCompilationInfo->GetCompileStatus());
+
+    if(m_FragmentCompilationInfo->GetCompileStatus() != GL_TRUE)
+        fragmentCompileLog += " log:\n" + m_FragmentCompilationInfo->GetCompileLog();
+
+    std::cout << vertexCompileLog << std::endl;
+    std::cout << fragmentCompileLog << std::endl;
 
     this->ID = CreateProgram(vertexShader, fragmentShader);
 
