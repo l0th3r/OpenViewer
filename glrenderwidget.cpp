@@ -1,24 +1,22 @@
 #include "glrenderwidget.h"
-#include "utils.h"
 #include "vbo.h"
 #include "ebo.h"
 #include "vao.h"
 
+#include <string>
+
 GLfloat vertices[] =
 {
-    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,        0.8f, 0.3f, 0.2f,
-    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,         0.8f, 0.3f, 0.2f,
-    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,      0.5f, 0.0f, 0.0f,
-    -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,     0.8f, 0.3f, 0.2f,
-    0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,      0.8f, 0.3f, 0.2f,
-    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,         0.0f, 0.0f, 0.0f
+    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
+    -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+    0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+    0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 1.0f,   1.0f, 0.0f
 };
 
 GLuint indices[] =
 {
-    0, 3, 5,
-    3, 2, 4,
-    5, 4, 1
+    0, 2, 1,
+    0, 3, 2
 };
 
 GLRenderWidget::GLRenderWidget(QWidget *parent)
@@ -28,7 +26,10 @@ GLRenderWidget::GLRenderWidget(QWidget *parent)
 
 GLRenderWidget::~GLRenderWidget()
 {
-    m_Shaders->Disable();
+    delete vbo;
+    delete ebo;
+    delete vao;
+    delete m_Texture;
     delete m_Shaders;
 }
 
@@ -47,42 +48,38 @@ void GLRenderWidget::initializeGL()
 
     // Create Shader Program
     m_Shaders = new ShaderProgram();
-}
 
-void GLRenderWidget::paintGL()
-{
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-    // Create render objects
-    VAO* vao = new VAO();
+    // Create 2D shape
+    vao = new VAO();
     vao->Bind();
 
-    VBO* vbo = new VBO(vertices, sizeof(vertices));
-    EBO* ebo = new EBO(indices, sizeof(indices));
+    vbo = new VBO(vertices, sizeof(vertices));
+    ebo = new EBO(indices, sizeof(indices));
 
-    vao->LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-    vao->LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    vao->LinkAttrib(vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    vao->LinkAttrib(vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    vao->LinkAttrib(vbo, 1, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     vao->Unbind();
     vbo->Unbind();
     ebo->Unbind();
 
-    GLuint uniformID = glGetUniformLocation(m_Shaders->ID, "scale");
+    // Create Texture
+    m_Texture = new Texture(":/Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    m_Texture->AssignTextureUnit(m_Shaders, "tex0", 0);
+}
 
-    // TEMP LOOP START
+void GLRenderWidget::paintGL()
+{
+    glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     m_Shaders->Enable();
-    glUniform1f(uniformID, 1.0f);
 
+    m_Texture->Bind();
     vao->Bind();
 
-    glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
-
-    // TEMP LOOP END
-
-    delete vbo;
-    delete ebo;
-    delete vao;
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void GLRenderWidget::resizeGL(int w, int h)
@@ -93,11 +90,4 @@ void GLRenderWidget::resizeGL(int w, int h)
     // glLoadIdentity();
     // glMatrixMode(GL_MODELVIEW);
     // glLoadIdentity();
-}
-
-void GLRenderWidget::qColorToRGB(const QColor &C, float &r, float &g, float &b) const
-{
-    r = normalize(C.red(), 1.0f, 255.0f);
-    g = normalize(C.green(), 1.0f, 255.0f);
-    b = normalize(C.blue(), 1.0f, 255.0f);
 }

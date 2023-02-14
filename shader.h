@@ -5,7 +5,6 @@
 #include <QFile>
 
 #include <string>
-#include <fstream>
 #include <iostream>
 
 class ShaderCompilationInfo : public QOpenGLFunctions_3_3_Core

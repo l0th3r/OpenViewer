@@ -2,6 +2,10 @@
 #define GLRENDERWIDGET_H
 
 #include "shader.h"
+#include "Texture.h"
+#include "vbo.h"
+#include "ebo.h"
+#include "vao.h"
 
 #include <QColor>
 #include <QOpenGLWidget>
@@ -23,13 +27,14 @@ protected:
     // Store shader program
     ShaderProgram* m_Shaders;
 
-    // TEMP
-    GLfloat *m_Vertices;
-
 private:
     QWidget* m_LoadingPanel;
 
-    void qColorToRGB(const QColor &C, float &r, float &g, float &b) const;
+    // TEMP
+    Texture* m_Texture;
+    VBO* vbo;
+    EBO* ebo;
+    VAO* vao;
 };
 
 #endif // GLRENDERWIDGET_H

@@ -13,6 +13,7 @@ HEADERS += \
     mainwindow.h \
     glrenderwidget.h \
     shader.h \
+    Texture.h \
     vao.h \
     vbo.h
 
@@ -22,6 +23,7 @@ SOURCES += \
     mainwindow.cpp \
     glrenderwidget.cpp \
     shader.cpp \
+    Texture.cpp \
     utils.cpp \
     vao.cpp \
     vbo.cpp
