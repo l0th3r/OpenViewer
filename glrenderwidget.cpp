@@ -6,12 +6,12 @@
 
 GLfloat vertices[] =
 {
-    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,
-    -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-    0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f
+    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,        0.8f, 0.3f, 0.2f,
+    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,         0.8f, 0.3f, 0.2f,
+    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,      0.5f, 0.0f, 0.0f,
+    -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,     0.8f, 0.3f, 0.2f,
+    0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,      0.8f, 0.3f, 0.2f,
+    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,         0.8f, 0.3f, 0.2f
 };
 
 GLuint indices[] =
@@ -61,7 +61,9 @@ void GLRenderWidget::paintGL()
     VBO* vbo = new VBO(vertices, sizeof(vertices));
     EBO* ebo = new EBO(indices, sizeof(indices));
 
-    vao->LinkVBOLayout(vbo, 0);
+    vao->LinkAttrib(vbo, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+    vao->LinkAttrib(vbo, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
     vao->Unbind();
     vbo->Unbind();
     ebo->Unbind();
