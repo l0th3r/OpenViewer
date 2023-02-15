@@ -22,6 +22,9 @@ public:
 
 private:
     const char* m_ResourcePath;
+    QSize m_ImageSize;
+    QImage::Format m_ImageFormat;
+
 };
 
 #endif // TEXTURE_H

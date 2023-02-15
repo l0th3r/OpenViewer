@@ -9,8 +9,13 @@ Texture::Texture(const char* resourcePath, GLenum type, GLenum slot, GLenum form
 
     QImage* img = new QImage(resourcePath);
 
+    // Save texture image settings
+    m_ImageSize = img->size();
+    m_ImageFormat = img->format();
+
     // Generates an OpenGL texture object
     glGenTextures(1, &ID);
+
     // Assigns the texture to a Texture Unit
     glActiveTexture(slot);
     glBindTexture(m_Type, ID);
@@ -24,7 +29,7 @@ Texture::Texture(const char* resourcePath, GLenum type, GLenum slot, GLenum form
     glTexParameteri(m_Type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     // Assigns the image to the OpenGL Texture object
-    glTexImage2D(m_Type, 0, GL_RGBA, img->width(), img->height(), 0, format, pixelType, img->bits());
+    glTexImage2D(m_Type, 0, GL_RGBA, img->width(), img->height(), 0, format, pixelType, img->mirrored().constBits());
     // Generates MipMaps
     glGenerateMipmap(m_Type);
 
