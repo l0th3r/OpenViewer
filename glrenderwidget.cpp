@@ -65,7 +65,7 @@ void GLRenderWidget::initializeGL()
     ebo->Unbind();
 
     // Create Texture
-    m_Texture = new Texture(":/Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    m_Texture = new Texture(":/Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_BGRA, GL_UNSIGNED_BYTE);
     m_Texture->AssignTextureUnit(m_Shaders, "tex0", 0);
 }
 
