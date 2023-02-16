@@ -21,9 +21,12 @@ public:
     GLRenderWidget(QWidget *parent = nullptr);
     ~GLRenderWidget();
 
+public slots:
+    void paintGL() override;
+
 protected:
     void initializeGL() override;
-    void paintGL() override;
+
     void resizeGL(int w, int h) override;
 
     // Store shader program
