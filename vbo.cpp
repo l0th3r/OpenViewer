@@ -1,6 +1,6 @@
 #include "vbo.h"
 
-VBO::VBO(GLfloat* vertices, GLsizeiptr size)
+VBO::VBO(const GLfloat* vertices, GLsizeiptr size)
 {
     initializeOpenGLFunctions();
 

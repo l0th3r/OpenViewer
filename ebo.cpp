@@ -1,6 +1,6 @@
 #include "ebo.h"
 
-EBO::EBO(GLuint* indices, GLsizeiptr size)
+EBO::EBO(const GLuint* indices, GLsizeiptr size)
 {
     initializeOpenGLFunctions();
 

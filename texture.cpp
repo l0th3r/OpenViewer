@@ -45,12 +45,12 @@ Texture::~Texture()
     Unbind();
 }
 
-void Texture::AssignTextureUnit(ShaderProgram* program, const char* uniform, GLuint unit)
+void Texture::AssignTextureUnit(ShaderProgram& program, const char* uniform, GLuint unit)
 {
     // Gets the location of the uniform
-    GLuint texUni = glGetUniformLocation(program->ID, uniform);
+    GLuint texUni = glGetUniformLocation(program.ID, uniform);
     // Shader needs to be enabled before changing the value of a uniform
-    program->Enable();
+    program.Enable();
     // Sets the value of the uniform
     glUniform1i(texUni, unit);
 }

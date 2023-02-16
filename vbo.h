@@ -8,7 +8,7 @@ class VBO : public QOpenGLFunctions_3_3_Core
 public:
     GLuint ID;
 
-    VBO(GLfloat* vertices, GLsizeiptr size);
+    VBO(const GLfloat* vertices, GLsizeiptr size);
     ~VBO();
 
     void Bind();

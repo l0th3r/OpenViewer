@@ -8,7 +8,7 @@ class EBO : public QOpenGLFunctions_3_3_Core
 public:
     GLuint ID;
 
-    EBO(GLuint* indices, GLsizeiptr size);
+    EBO(const GLuint* indices, GLsizeiptr size);
     ~EBO();
 
     void Bind();

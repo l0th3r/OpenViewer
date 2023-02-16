@@ -15,7 +15,7 @@ public:
     Texture(const char* resourcePath, GLenum type, GLenum slot, GLenum format, GLenum pixelType);
     ~Texture();
 
-    void AssignTextureUnit(ShaderProgram* program, const char* uniform, GLuint unit);
+    void AssignTextureUnit(ShaderProgram& program, const char* uniform, GLuint unit);
     void Bind();
     void Unbind();
     void Delete();

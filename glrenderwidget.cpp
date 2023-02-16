@@ -56,9 +56,9 @@ void GLRenderWidget::initializeGL()
     vbo = new VBO(vertices, sizeof(vertices));
     ebo = new EBO(indices, sizeof(indices));
 
-    vao->LinkAttrib(vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-    vao->LinkAttrib(vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    vao->LinkAttrib(vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    vao->LinkAttrib(*vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    vao->LinkAttrib(*vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    vao->LinkAttrib(*vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     vao->Unbind();
     vbo->Unbind();
@@ -66,7 +66,7 @@ void GLRenderWidget::initializeGL()
 
     // Create Texture
     m_Texture = new Texture(":/Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_BGRA, GL_UNSIGNED_BYTE);
-    m_Texture->AssignTextureUnit(m_Shaders, "tex0", 0);
+    m_Texture->AssignTextureUnit(*m_Shaders, "tex0", 0);
 }
 
 void GLRenderWidget::paintGL()
