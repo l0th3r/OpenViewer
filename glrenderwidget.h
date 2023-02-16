@@ -10,6 +10,8 @@
 #include <QColor>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Core>
+#include <QTime>
+
 #include <iostream>
 
 class GLRenderWidget : public QOpenGLWidget, public QOpenGLFunctions_3_3_Core
@@ -35,6 +37,9 @@ private:
     VBO* vbo;
     EBO* ebo;
     VAO* vao;
+
+    float m_Rotation;
+    QTime m_PrevTime;
 };
 
 #endif // GLRENDERWIDGET_H
