@@ -32,9 +32,6 @@
       <item>
        <layout class="QVBoxLayout" name="LeftLayout">
         <item>
-         <layout class="QVBoxLayout" name="SliderLayout"/>
-        </item>
-        <item>
          <widget class="QSlider" name="SliderPaint">
           <property name="contextMenuPolicy">
            <enum>Qt::NoContextMenu</enum>

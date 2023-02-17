@@ -12,8 +12,6 @@
 #include <QOpenGLFunctions_3_3_Core>
 #include <QTime>
 
-#include <iostream>
-
 class GLRenderWidget : public QOpenGLWidget, public QOpenGLFunctions_3_3_Core
 {
     Q_OBJECT
@@ -21,19 +19,20 @@ public:
     GLRenderWidget(QWidget *parent = nullptr);
     ~GLRenderWidget();
 
+    void Start();
+
 public slots:
+    void Update();
+
+protected:    
+    void initializeGL() override;
     void paintGL() override;
 
-protected:
-    void initializeGL() override;
-
-    void resizeGL(int w, int h) override;
-
-    // Store shader program
-    ShaderProgram* m_Shaders;
+    //void paintEvent(QPaintEvent *e) override;
 
 private:
-    QWidget* m_LoadingPanel;
+    // Store shader program
+    ShaderProgram* m_Shaders;
 
     // TEMP
     Texture* m_Texture;

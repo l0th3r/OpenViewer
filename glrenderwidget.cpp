@@ -28,24 +28,18 @@ GLuint indices[] =
 };
 
 GLRenderWidget::GLRenderWidget(QWidget *parent)
-    : QOpenGLWidget { parent }
-{
-}
+    : QOpenGLWidget { parent } {}
 
-GLRenderWidget::~GLRenderWidget()
+void GLRenderWidget::Update()
 {
-    delete vbo;
-    delete ebo;
-    delete vao;
-    delete m_Texture;
-    delete m_Shaders;
+    update();
 }
 
 void GLRenderWidget::initializeGL()
 {
     // Init opengl
     initializeOpenGLFunctions();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHT0);
@@ -111,19 +105,20 @@ void GLRenderWidget::paintGL()
     int projMtxId = glGetUniformLocation(m_Shaders->ID, "mtx_proj");
     glUniformMatrix4fv(projMtxId, 1, GL_FALSE, glm::value_ptr(proj));
 
-
     m_Texture->Bind();
     vao->Bind();
 
     glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+
+    m_Texture->Unbind();
+    vao->Unbind();
 }
 
-void GLRenderWidget::resizeGL(int w, int h)
+GLRenderWidget::~GLRenderWidget()
 {
-    glViewport(0, 0, w, h);
-
-    // glMatrixMode(GL_PROJECTION);
-    // glLoadIdentity();
-    // glMatrixMode(GL_MODELVIEW);
-    // glLoadIdentity();
+    delete vbo;
+    delete ebo;
+    delete vao;
+    delete m_Texture;
+    delete m_Shaders;
 }

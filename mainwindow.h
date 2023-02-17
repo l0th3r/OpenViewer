@@ -17,5 +17,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QTimer* m_Timer;
 };
 #endif // MAINWINDOW_H
