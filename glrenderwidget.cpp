@@ -1,12 +1,4 @@
 #include "glrenderwidget.h"
-#include "vbo.h"
-#include "ebo.h"
-#include "vao.h"
-
-#include <string>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 GLfloat vertices[] =
 {
@@ -32,7 +24,7 @@ GLRenderWidget::GLRenderWidget(QWidget *parent)
 
 void GLRenderWidget::Update()
 {
-    update();
+    GLRenderWidget::update();
 }
 
 void GLRenderWidget::initializeGL()
@@ -51,7 +43,7 @@ void GLRenderWidget::initializeGL()
     // Create Shader Program
     m_Shaders = new ShaderProgram();
 
-    // Create 2D shape
+    // Create 3D shape
     vao = new VAO();
     vao->Bind();
 
@@ -70,40 +62,18 @@ void GLRenderWidget::initializeGL()
     m_Texture = new Texture(":/Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_BGRA, GL_UNSIGNED_BYTE);
     m_Texture->AssignTextureUnit(*m_Shaders, "tex0", 0);
 
-    m_Rotation = 0.0f;
-    m_PrevTime = QTime::currentTime();
+    m_Camera = new Camera(this->width(), this->height(), glm::vec3(0.0f, 0.0f, 0.2f));
 }
 
 void GLRenderWidget::paintGL()
 {
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_Shaders->Enable();
 
-    QTime crntTime = QTime::currentTime();
-    if (crntTime.msecsSinceStartOfDay() - m_PrevTime.msecsSinceStartOfDay() >= 5)
-    {
-        m_Rotation += 0.5f;
-        m_PrevTime = crntTime;
-    }
-
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 proj = glm::mat4(1.0f);
-
-    model = glm::rotate(model, glm::radians(m_Rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-    view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-    proj = glm::perspective(glm::radians(45.0f), (float)(this->size().width()/this->size().width()), 0.1f, 100.0f);
-
-    int modelMtxId = glGetUniformLocation(m_Shaders->ID, "mtx_model");
-    glUniformMatrix4fv(modelMtxId, 1, GL_FALSE, glm::value_ptr(model));
-
-    int viewMtxId = glGetUniformLocation(m_Shaders->ID, "mtx_view");
-    glUniformMatrix4fv(viewMtxId, 1, GL_FALSE, glm::value_ptr(view));
-
-    int projMtxId = glGetUniformLocation(m_Shaders->ID, "mtx_proj");
-    glUniformMatrix4fv(projMtxId, 1, GL_FALSE, glm::value_ptr(proj));
+    m_Camera->Matrix(45.0f, 0.1f, 100.0f, *m_Shaders, "mtx_cam");
+    ManageCameraInput();
 
     m_Texture->Bind();
     vao->Bind();
@@ -112,6 +82,66 @@ void GLRenderWidget::paintGL()
 
     m_Texture->Unbind();
     vao->Unbind();
+}
+
+void GLRenderWidget::mousePressEvent(QMouseEvent *event)
+{
+    //QCursor cursor(Qt::BlankCursor);
+    //QApplication::setOverrideCursor(cursor);
+    //QApplication::changeOverrideCursor(cursor);
+
+    if (event->button() == Qt::MouseButton::LeftButton)
+    {
+        std::cout << "MOUSE PRESSED" << std::endl;
+        m_NeedMouseTracking = true;
+        m_MouseStartPosition = event->position();
+    }
+}
+
+void GLRenderWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if(m_NeedMouseTracking == true)
+    {
+        m_MousePosition = m_MouseStartPosition - event->position();
+        //std::cout << "MOUSE MOVE x=" << m_MousePosition.x() << " y=" << m_MousePosition.y() << std::endl;
+    }
+}
+
+void GLRenderWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    //QApplication::restoreOverrideCursor();
+    if (event->button() == Qt::MouseButton::LeftButton)
+    {
+        std::cout << "MOUSE RELEASE" << std::endl;
+        m_NeedMouseTracking = false;
+    }
+}
+
+void GLRenderWidget::wheelEvent(QWheelEvent* event)
+{
+    m_RequestedZoom = event->angleDelta().y();
+}
+
+void GLRenderWidget::ManageCameraInput()
+{
+    // Zoom
+    m_Camera->Speed = glm::abs(m_RequestedZoom) / 100.0f;
+
+    if (m_RequestedZoom > 0)
+    {
+        m_Camera->ZoomIn();
+    }
+    else if (m_RequestedZoom < 0)
+    {
+        m_Camera->ZoomOut();
+    }
+    m_RequestedZoom = 0;
+
+    // Orientation
+    if(m_NeedMouseTracking == false)
+        return;
+
+    m_Camera->SetRotation(m_MousePosition.x(), m_MousePosition.y());
 }
 
 GLRenderWidget::~GLRenderWidget()

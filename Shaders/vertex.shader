@@ -6,15 +6,11 @@ layout (location = 2) in vec2 aTex;
 out vec3 color;
 out vec2 texCoord;
 
-uniform float scale;
-
-uniform mat4 mtx_model;
-uniform mat4 mtx_view;
-uniform mat4 mtx_proj;
+uniform mat4 mtx_cam;
 
 void main(void)
 {
-    gl_Position = mtx_proj * mtx_view * mtx_model * vec4(aPos, 1.0f);
+    gl_Position = mtx_cam * vec4(aPos, 1.0f);
     color = aColor;
     texCoord = aTex;
 }
