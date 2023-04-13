@@ -20,6 +20,9 @@ public:
     glm::vec3 Orientation;
     glm::vec3 Up;
 
+    float OrbitX;
+    float OrbitY;
+
     int Width;
     int Height;
 
@@ -27,7 +30,8 @@ public:
     float Sensitivity;
 
     void Matrix(float FOVdeg, float nearPlane, float farPlane, ShaderProgram& shaderProgram, const char* uniform);
-    void SetRotation(double mouseX, double mouseY);
+    void UpdateOrbitInput(double mouseX, double mouseY);
+    void SetCameraAroundOrigin(float x, float y);
     void ZoomIn();
     void ZoomOut();
 };

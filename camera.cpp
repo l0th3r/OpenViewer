@@ -30,10 +30,13 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, ShaderProgram
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(proj * view));
 }
 
-void Camera::SetRotation(double mx, double my)
+void Camera::UpdateOrbitInput(double mouseX, double mouseY)
 {
-    //float rotx = Sensitivity * (float)(my - (Height / 2)) / Height;
-    //float roty = Sensitivity * (float)(mx - (Height / 2)) / Height;
+
+}
+
+void Camera::SetCameraAroundOrigin(float x, float y)
+{
 
 }
 
