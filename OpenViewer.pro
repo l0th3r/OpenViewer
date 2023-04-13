@@ -13,9 +13,9 @@ HEADERS += \
     ebo.h \
     mainwindow.h \
     glrenderwidget.h \
-    renderingworker.h \
     shader.h \
     texture.h \
+    utils.h \
     vao.h \
     vbo.h
 
@@ -25,7 +25,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     glrenderwidget.cpp \
-    renderingworker.cpp \
     shader.cpp \
     texture.cpp \
     utils.cpp \
