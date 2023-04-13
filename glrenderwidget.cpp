@@ -62,7 +62,7 @@ void GLRenderWidget::initializeGL()
     m_Texture = new Texture(":/Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_BGRA, GL_UNSIGNED_BYTE);
     m_Texture->AssignTextureUnit(*m_Shaders, "tex0", 0);
 
-    m_Camera = new Camera(this->width(), this->height(), glm::vec3(0.0f, 0.0f, 0.2f));
+    m_Camera = new Camera(this->width(), this->height(), glm::vec3(0.0f, 0.0f, 2.0f));
 }
 
 void GLRenderWidget::paintGL()
@@ -92,7 +92,6 @@ void GLRenderWidget::mousePressEvent(QMouseEvent *event)
 
     if (event->button() == Qt::MouseButton::LeftButton)
     {
-        std::cout << "MOUSE PRESSED" << std::endl;
         m_NeedMouseTracking = true;
         m_MouseStartPosition = event->position();
     }
@@ -103,7 +102,7 @@ void GLRenderWidget::mouseMoveEvent(QMouseEvent *event)
     if(m_NeedMouseTracking == true)
     {
         m_MousePosition = m_MouseStartPosition - event->position();
-        //std::cout << "MOUSE MOVE x=" << m_MousePosition.x() << " y=" << m_MousePosition.y() << std::endl;
+        std::cout << "MOUSE MOVE x=" << m_MousePosition.x() << " y=" << m_MousePosition.y() << std::endl;
     }
 }
 
@@ -112,7 +111,6 @@ void GLRenderWidget::mouseReleaseEvent(QMouseEvent *event)
     //QApplication::restoreOverrideCursor();
     if (event->button() == Qt::MouseButton::LeftButton)
     {
-        std::cout << "MOUSE RELEASE" << std::endl;
         m_NeedMouseTracking = false;
     }
 }
@@ -141,7 +139,7 @@ void GLRenderWidget::ManageCameraInput()
     if(m_NeedMouseTracking == false)
         return;
 
-    m_Camera->SetRotation(m_MousePosition.x(), m_MousePosition.y());
+    m_Camera->UpdateOrbitInput(m_MousePosition.x(), m_MousePosition.y());
 }
 
 GLRenderWidget::~GLRenderWidget()
